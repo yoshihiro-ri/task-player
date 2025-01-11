@@ -79,6 +79,20 @@ export const createWindow = (
       ...options.webPreferences,
     },
   })
+  // 画面の幅と高さを取得
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize
+
+  // 画面下部にウィンドウを配置
+  const xPosition = 0 // 左端
+  const yPosition = height - 500 + 38 // 画面下部
+
+  // ウィンドウの位置とサイズを設定
+  win.setBounds({
+    x: xPosition,
+    y: yPosition,
+    width: width,  // 画面幅を100%に設定
+    height: 500
+  })
 
   win.on('close', saveState)
 
