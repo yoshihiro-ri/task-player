@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// モデルの定義例
+model Task {
+  id         Int      @id @default(autoincrement())
+  title      String
+  expected_cost       Int      @default(0)
+  actual_used_cost       Int      @default(0)
+  is_done    Boolean  @default(false)
+  is_deleted Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  order      Int      @default(0)
+
+  @@map("tasks")
+}
