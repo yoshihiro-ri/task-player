@@ -7,56 +7,52 @@ import TaskTitle from "./TaskTitle";
 import TimeDifference from "./TimeDifference";
 import { ProgressTime } from "./ProgressTime";
 import { Task } from "../models/Task";
+import ProgressBar from "./ProgressBar";
+import { useTaskState } from "../hooks/useTaskState";
+import { format } from "date-fns";
 
 interface TaskPlayerProps {
   task: Task;
 }
 
 const TaskPlayer: React.FC<TaskPlayerProps> = ({ task }: TaskPlayerProps) => {
-  const [taskStatus, setTaskStatus] = useState<
-    "stopped" | "playing" | "done" | "cancel"
-  >("stopped");
-
-  const handleTaskPlay = () => {
-    setTaskStatus("playing");
-  };
-
-  const handleTaskStop = () => {
-    setTaskStatus("stopped");
-  };
-
-  const handleTaskDone = () => {
-    setTaskStatus("done");
-  };
-
-  const handleTaskCancel = () => {
-    setTaskStatus("cancel");
-  };
-
   const handleUpdateTitle = (newTitle: string) => {
     task.title = newTitle;
   };
 
+  const formatTime = (second: number) => {
+    return format(new Date(second * 1000), "mm:ss");
+  };
+  const scheduledTime = 60;
+
+  const {
+    elapsedTime,
+    isRunning,
+    startTimer,
+    stopTimer,
+    completeTask,
+    cancelTask,
+    progressionRate,
+  } = useTaskState(scheduledTime);
   return (
     <div>
-      <p>Current Status : {taskStatus}</p>
+      <ProgressBar progressionRate={progressionRate} />
       <div className="flex bg-gray-500 p-4 gap-x-5">
-        <CancelTaskButton onClick={handleTaskCancel} />
+        <CancelTaskButton onClick={cancelTask} />
         <div className="px-2">
-          {taskStatus === "stopped" ? (
-            <PlayTaskButton onClick={handleTaskPlay} />
-          ) : null}
-          {taskStatus === "playing" ? (
-            <PauseTaskButton onClick={handleTaskStop} />
-          ) : null}
+          {isRunning ? (
+            <PauseTaskButton onClick={isRunning ? stopTimer : startTimer} />
+          ) : (
+            <PlayTaskButton onClick={isRunning ? stopTimer : startTimer} />
+          )}
         </div>
-        <DoneButton onClick={handleTaskDone} />
-        <ProgressTime />
-        <TimeDifference />
-        <TaskTitle
-          title={task.title}
-          onUpdate={handleUpdateTitle}
+        <DoneButton onClick={completeTask} />
+        <ProgressTime
+          scheduledTime={formatTime(scheduledTime)}
+          elapsedTime={formatTime(elapsedTime)}
         />
+        <TimeDifference />
+        <TaskTitle title={task.title} onUpdate={handleUpdateTitle} />
       </div>
     </div>
   );
