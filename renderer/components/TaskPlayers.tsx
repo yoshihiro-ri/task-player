@@ -13,12 +13,20 @@ const TaskPlayers = () => {
     setTasks(tasks.add(task));
   };
 
-  const activeTask = tasks.getActiveTasks();
+  const handleTaskUpdate = (updatedTask: Task) => {
+    setTasks(tasks.updateTask(updatedTask));
+  };
+
+  const activeTasks = tasks.filter(task => !task.isCompleted);
 
   return (
     <div>
-      {activeTask.map((task) => (
-        <TaskPlayer key={task.hash_id} task={task} />
+      {activeTasks.map((task) => (
+        <TaskPlayer 
+          key={task.hash_id} 
+          task={task}
+          onTaskUpdate={handleTaskUpdate}
+        />
       ))}
       <AddTaskButton onClick={addTask}/>
     </div>

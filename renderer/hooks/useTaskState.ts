@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
+import { Task } from "../models/Task";
 
-export const useTaskState = (scheduledTime: number) => {
+interface UseTaskStateProps {
+  task: Task;
+  scheduledTime: number;
+  onTaskUpdate: (task: Task) => void;
+}
+
+export const useTaskState = ({ task, scheduledTime, onTaskUpdate }: UseTaskStateProps) => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isRunning, SetIsRunning] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
@@ -17,6 +24,8 @@ export const useTaskState = (scheduledTime: number) => {
 
   const completeTask = () => {
     setIsCompleted(true);
+    task.isCompleted = true;
+    onTaskUpdate(task);
   };
 
   const cancelTask = () => {
@@ -52,6 +61,7 @@ export const useTaskState = (scheduledTime: number) => {
     stopTimer,
     completeTask,
     cancelTask,
-    progressionRate
+    progressionRate,
+    isCompleted
   };
 };

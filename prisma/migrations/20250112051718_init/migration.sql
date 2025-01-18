@@ -4,7 +4,7 @@ CREATE TABLE "tasks" (
     "title" TEXT NOT NULL,
     "expected_cost" INTEGER NOT NULL DEFAULT 0,
     "actual_used_cost" INTEGER NOT NULL DEFAULT 0,
-    "is_done" BOOLEAN NOT NULL DEFAULT false,
+    "is_completed" BOOLEAN NOT NULL DEFAULT false,
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL,
