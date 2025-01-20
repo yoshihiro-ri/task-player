@@ -3,7 +3,7 @@ import TaskPlayer from "./TaskPlayer";
 import AddTaskButton from "./Button/AddTaskButton";
 import { Tasks } from "../models/Tasks";
 import { Task } from "../models/Task";
-
+import CompletedTask from "./CompletedTask";
 const TaskPlayers = () => {
   const initialTasks = new Tasks().add(new Task());
   const [tasks, setTasks] = useState(initialTasks);
@@ -17,18 +17,26 @@ const TaskPlayers = () => {
     setTasks(tasks.updateTask(updatedTask));
   };
 
-  const activeTasks = tasks.filter(task => !task.isCompleted);
+  const activeTasks = tasks.filter((task) => !task.isCompleted);
+  const completedTasks = tasks.filter((task) => task.isCompleted);
+
 
   return (
     <div>
       {activeTasks.map((task) => (
-        <TaskPlayer 
-          key={task.hash_id} 
+        <TaskPlayer
+          key={task.hash_id}
           task={task}
           onTaskUpdate={handleTaskUpdate}
         />
       ))}
-      <AddTaskButton onClick={addTask}/>
+      <AddTaskButton onClick={addTask} />
+      <p>========完了したタスク========</p>
+      {completedTasks.map((task) => (
+        <CompletedTask
+          title={task.title}
+        />
+      ))}
     </div>
   );
 };
