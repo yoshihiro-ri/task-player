@@ -10,13 +10,18 @@ import { Task } from "../models/Task";
 import ProgressBar from "./ProgressBar";
 import { useTaskState } from "../hooks/useTaskState";
 import { format } from "date-fns";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 interface TaskPlayerProps {
   task: Task;
   onTaskUpdate: (task: Task) => void;
 }
 
-const TaskPlayer: React.FC<TaskPlayerProps> = ({ task, onTaskUpdate }: TaskPlayerProps) => {
+const TaskPlayer: React.FC<TaskPlayerProps> = ({
+  task,
+  onTaskUpdate,
+}: TaskPlayerProps) => {
   const [scheduledTime, setScheduledTime] = useState(15);
   const {
     elapsedTime,
@@ -27,10 +32,21 @@ const TaskPlayer: React.FC<TaskPlayerProps> = ({ task, onTaskUpdate }: TaskPlaye
     cancelTask,
     progressionRate,
     isCompleted,
-  } = useTaskState({ 
-    task, 
+  } = useTaskState({
+    task,
     scheduledTime,
-    onTaskUpdate  // タスクの更新を親コンポーネントに通知
+    onTaskUpdate, // タスクの更新を親コンポーネントに通知
+  });
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: task.id,
   });
 
   const handleUpdateTitle = (newTitle: string) => {
@@ -42,7 +58,15 @@ const TaskPlayer: React.FC<TaskPlayerProps> = ({ task, onTaskUpdate }: TaskPlaye
   };
 
   return (
-    <div>
+    <div
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+      }}
+    >
       <ProgressBar progressionRate={progressionRate} />
       <div className="flex bg-gray-500 p-4 gap-x-5">
         <CancelTaskButton onClick={cancelTask} />

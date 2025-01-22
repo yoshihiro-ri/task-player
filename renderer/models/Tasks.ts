@@ -7,6 +7,16 @@ export class Tasks {
     this.items = [];
   }
 
+  toArray(): Task[] {
+    return [...this.items];
+  }
+
+  static fromArray(tasks: Task[]): Tasks {
+    const newTasks = new Tasks();
+    newTasks.items = tasks;
+    return newTasks;
+  }
+
   add(task: Task): Tasks {
     const newTasks = new Tasks();
     newTasks.items = [...this.items, task];
