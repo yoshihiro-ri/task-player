@@ -49,7 +49,6 @@ const TaskPlayers = () => {
         <SortableContext items={activeTasks}>
         {activeTasks.map((task) => (
           <TaskPlayer
-            key={task.hash_id}
             task={task}
             onTaskUpdate={handleTaskUpdate}
           />
