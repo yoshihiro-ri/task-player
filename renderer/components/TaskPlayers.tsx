@@ -5,7 +5,7 @@ import { Tasks } from "../models/Tasks";
 import { Task } from "../models/Task";
 import CompletedTask from "./CompletedTask";
 import { DndContext } from "@dnd-kit/core";
-import { SortableContext, arrayMove } from "@dnd-kit/sortable";
+import { SortableContext, arrayMove ,verticalListSortingStrategy } from "@dnd-kit/sortable";
 
 const TaskPlayers = () => {
   const initialTasks = new Tasks().add(new Task());
@@ -18,13 +18,14 @@ const TaskPlayers = () => {
 
   const handleTaskUpdate = (updatedTask: Task) => {
     setTasks(tasks.updateTask(updatedTask));
+    console.log("updatedTask")
   };
 
-  const activeTasks = tasks.filter((task) => !task.isCompleted);
-  const completedTasks = tasks.filter((task) => task.isCompleted);
+  const activeTasks = tasks.activeTasks()
+  const completedTasks = tasks.completedTasks()
 
   return (
-    <div>
+    <div className="overflow-hidden w-full">
       <DndContext
         onDragEnd={(event) => {
           const { active, over } = event;
@@ -41,25 +42,30 @@ const TaskPlayers = () => {
                 (item) => item.id === over.id
               );
               const newArray = arrayMove(tasksArray, oldIndex, newIndex);
+              console.log(newArray)
               return Tasks.fromArray(newArray);
             });
           }
         }}
       >
-        <SortableContext items={activeTasks}>
-        {activeTasks.map((task) => (
-          <TaskPlayer
-            task={task}
-            onTaskUpdate={handleTaskUpdate}
-          />
-        ))}
+        <SortableContext items={activeTasks} strategy={verticalListSortingStrategy}>
+          {activeTasks.map((task) => (
+            <TaskPlayer
+              key={task.id}
+              task={task}
+              onTaskUpdate={handleTaskUpdate}
+            />
+          ))}
         </SortableContext>
 
         <AddTaskButton onClick={addTask} />
       </DndContext>
       <p>========完了したタスク========</p>
       {completedTasks.map((task) => (
-        <CompletedTask title={task.title} />
+        <CompletedTask 
+          key={task.id}
+          title={task.title} 
+        />
       ))}
     </div>
   );

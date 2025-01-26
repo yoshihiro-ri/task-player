@@ -60,30 +60,41 @@ const TaskPlayer: React.FC<TaskPlayerProps> = ({
   return (
     <div
       ref={setNodeRef}
-      {...attributes}
-      {...listeners}
       style={{
         transform: CSS.Transform.toString(transform),
         transition,
       }}
+      className="relative"
     >
       <ProgressBar progressionRate={progressionRate} />
       <div className="flex bg-gray-500 p-4 gap-x-5">
         <CancelTaskButton onClick={cancelTask} />
-        <div className="px-2">
+        <div className="px-2 z-10">
           {isRunning ? (
             <PauseTaskButton onClick={isRunning ? stopTimer : startTimer} />
           ) : (
             <PlayTaskButton onClick={isRunning ? stopTimer : startTimer} />
           )}
         </div>
+        <div className="z-10">
         <DoneButton onClick={completeTask} />
+        </div>
         <ScheduledTime
           scheduledTime={scheduledTime}
           onTimeChange={setScheduledTime}
         />
         <ElapsedTime elapsedTime={formatTime(elapsedTime)} />
-        <TaskTitle title={task.title} onUpdate={handleUpdateTitle} />
+        <div className="z-10">
+          <TaskTitle title={task.title} onUpdate={handleUpdateTitle} />
+        </div>
+        <div
+          {...attributes}
+          {...listeners}
+          className="absolute inset-0 cursor-move"
+          style={{ pointerEvents: 'none' }}
+        >
+          <div className="absolute inset-0 pointer-events-auto" />
+        </div>
       </div>
     </div>
   );

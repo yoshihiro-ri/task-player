@@ -25,7 +25,7 @@ export class Tasks {
 
   updateTask(updatedTask: Task): Tasks {
     const newTasks = new Tasks();
-    newTasks.items = this.items.map(task => 
+    newTasks.items = this.items.map((task) =>
       task.hash_id === updatedTask.hash_id ? updatedTask : task
     );
     return newTasks;
@@ -37,5 +37,14 @@ export class Tasks {
 
   map<T>(callback: (task: Task) => T): T[] {
     return this.items.map(callback);
+  }
+
+  activeTasks(): Task[] {
+    console.log('%o',this.items)
+    return this.items.filter((task) => !task.isCompleted);
+  }
+
+  completedTasks(): Task[] {
+    return this.items.filter((task) => task.isCompleted);
   }
 }
