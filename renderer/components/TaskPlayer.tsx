@@ -12,10 +12,20 @@ import { useTaskState } from "../hooks/useTaskState";
 import { format } from "date-fns";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { mainWindow } from "../../main/background";
+import { updateBoundsActive } from "../../main/helpers/update-bounds";
 
 interface TaskPlayerProps {
   task: Task;
   onTaskUpdate: (task: Task) => void;
+}
+
+declare global {
+  interface Window {
+    electron: {
+      updateBounds: (status: string) => void;
+    }
+  }
 }
 
 const TaskPlayer: React.FC<TaskPlayerProps> = ({
@@ -67,31 +77,40 @@ const TaskPlayer: React.FC<TaskPlayerProps> = ({
       className="relative"
     >
       <ProgressBar progressionRate={progressionRate} />
-      <div className="flex bg-gray-500 p-4 gap-x-5">
-        <CancelTaskButton onClick={cancelTask} />
-        <div className="px-2 z-10">
+      <div
+        className="absolute inset-0 cursor-pointer z-10"
+        onClick={() => window.electron.updateBounds('active')}
+
+      />
+      <div className="flex bg-gray-500 p-4 gap-x-5 relative">
+        <div className="z-20">
+          <CancelTaskButton onClick={cancelTask} />
+        </div>
+        <div className="px-2 z-20">
           {isRunning ? (
             <PauseTaskButton onClick={isRunning ? stopTimer : startTimer} />
           ) : (
             <PlayTaskButton onClick={isRunning ? stopTimer : startTimer} />
           )}
         </div>
-        <div className="z-10">
-        <DoneButton onClick={completeTask} />
+        <div className="z-20">
+          <DoneButton onClick={completeTask} />
         </div>
-        <ScheduledTime
-          scheduledTime={scheduledTime}
-          onTimeChange={setScheduledTime}
-        />
+        <div className="z-20">
+          <ScheduledTime
+            scheduledTime={scheduledTime}
+            onTimeChange={setScheduledTime}
+          />
+        </div>
         <ElapsedTime elapsedTime={formatTime(elapsedTime)} />
-        <div className="z-10">
+        <div className="z-20">
           <TaskTitle title={task.title} onUpdate={handleUpdateTitle} />
         </div>
         <div
           {...attributes}
           {...listeners}
           className="absolute inset-0 cursor-move"
-          style={{ pointerEvents: 'none' }}
+          style={{ pointerEvents: "none" }}
         >
           <div className="absolute inset-0 pointer-events-auto" />
         </div>

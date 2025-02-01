@@ -17,4 +17,8 @@ const handler = {
 
 contextBridge.exposeInMainWorld('ipc', handler)
 
+contextBridge.exposeInMainWorld('electron', {
+  updateBounds: (status: string) => ipcRenderer.send('update-bounds', status)
+})
+
 export type IpcHandler = typeof handler
