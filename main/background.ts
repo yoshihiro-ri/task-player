@@ -1,10 +1,14 @@
 import path from "path";
-import { app, ipcMain, BrowserWindow } from "electron";
+import { app, ipcMain, BrowserWindow, contextBridge } from "electron";
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
-import { updateBoundsActive,updateBoundsInactive } from "./helpers/update-bounds";
+import {
+  updateTaskPlayersBoundsOpened,
+  updateTaskPlayersBoundsClosed,
+} from "./helpers/update-bounds";
 const isProd = process.env.NODE_ENV === "production";
 let mainWindow: BrowserWindow;
+let isTaskPlayerOpened = false;
 
 if (isProd) {
   serve({ directory: "app" });
@@ -24,22 +28,23 @@ if (isProd) {
     },
   });
 
-  const updateBounds = (status: "focus" | "blur") => {
-    if (status === "focus") {
-      updateBoundsActive(mainWindow);
+  const updateBounds = (isOpened: boolean) => {
+    console.log("isOpened", isOpened);
+    isTaskPlayerOpened = isOpened;
+    console.log(isTaskPlayerOpened);
+    if (isTaskPlayerOpened) {
+      updateTaskPlayersBoundsOpened(mainWindow);
     } else {
-      updateBoundsInactive(mainWindow);
+      updateTaskPlayersBoundsClosed(mainWindow);
     }
   };
 
-  // mainWindow.on("focus", () => {
-  //   updateBounds(mainWindow, "focus");
-  //   console.log("focus");
-  // });
-
   mainWindow.on("blur", () => {
-    updateBounds("blur");
-    console.log("blur");
+    updateBounds(false);
+  });
+
+  ipcMain.on("update-bounds", (_, status) => {
+    updateBounds(status);
   });
 
   if (isProd) {
@@ -54,16 +59,8 @@ app.on("window-all-closed", () => {
   app.quit();
 });
 
-ipcMain.on("message", async (event, arg) => {
-  event.reply("message", `${arg} World!`);
+ipcMain.handle("get-status", () => {
+  return isTaskPlayerOpened;
 });
 
-ipcMain.on('update-bounds', (_, status) => {
-  if (status === 'active') {
-    updateBoundsActive(mainWindow);
-  } else {
-    updateBoundsInactive(mainWindow);
-  }
-});
-
-export { mainWindow };
+export { mainWindow, isTaskPlayerOpened };

@@ -3,7 +3,7 @@ import { screen, BrowserWindow } from "electron";
 const activeWindowHeight = 500;
 const inactiveWindowHeight = 80;
 
-export const updateBoundsActive = (
+export const updateTaskPlayersBoundsOpened = (
   window: BrowserWindow,
 ) => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
@@ -17,7 +17,7 @@ export const updateBoundsActive = (
 
 };
 
-export const updateBoundsInactive = (window: BrowserWindow) => {
+export const updateTaskPlayersBoundsClosed = (window: BrowserWindow) => {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
   window.setBounds({

@@ -12,8 +12,6 @@ import { useTaskState } from "../hooks/useTaskState";
 import { format } from "date-fns";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { mainWindow } from "../../main/background";
-import { updateBoundsActive } from "../../main/helpers/update-bounds";
 
 interface TaskPlayerProps {
   task: Task;
@@ -23,7 +21,7 @@ interface TaskPlayerProps {
 declare global {
   interface Window {
     electron: {
-      updateBounds: (status: string) => void;
+      updateStatus: (status:boolean) => void;
     }
   }
 }
@@ -41,7 +39,6 @@ const TaskPlayer: React.FC<TaskPlayerProps> = ({
     completeTask,
     cancelTask,
     progressionRate,
-    isCompleted,
   } = useTaskState({
     task,
     scheduledTime,
@@ -79,7 +76,7 @@ const TaskPlayer: React.FC<TaskPlayerProps> = ({
       <ProgressBar progressionRate={progressionRate} />
       <div
         className="absolute inset-0 cursor-pointer z-10"
-        onClick={() => window.electron.updateBounds('active')}
+        onClick={() => window.electron.updateStatus(true)}
 
       />
       <div className="flex bg-gray-500 p-4 gap-x-5 relative">
