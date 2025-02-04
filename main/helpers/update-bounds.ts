@@ -1,5 +1,4 @@
 import { screen,BrowserWindow } from "electron";
-import { start } from "repl";
 
 const animateWindowSize = async (
   window: BrowserWindow,
@@ -7,7 +6,7 @@ const animateWindowSize = async (
   endTop: number,
   startWindowHeight: number,
   endWindowHeight: number,
-  duration: number = 100
+  duration: number = 80
 ) => {
 
   const steps = 30;
@@ -27,12 +26,18 @@ const animateWindowSize = async (
   }
 };
 
-// export const updateTaskPlayersBoundsOpened = async (window: BrowserWindow) => {
-//   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-//   await animateWindowSize(window, height, 500);
-// };
+export const updateTaskPlayersBoundsOpened = async (window: BrowserWindow) => {
+  if (window.getBounds().height === 500) return
+  const { height:screenHeight } = screen.getPrimaryDisplay().workAreaSize;
+  const startWindowHeight = 80
+  const startTop = screenHeight  - 80
+  const endWindowHeight = 500
+  const endTop = screenHeight  - 500
+  await animateWindowSize(window, startTop, endTop,startWindowHeight,endWindowHeight);
+};
 
 export const updateTaskPlayersBoundsClosed = async (window: BrowserWindow) => {
+  if (window.getBounds().height === 80) return
   const { height:screenHeight } = screen.getPrimaryDisplay().workAreaSize;
   const startWindowHeight = 500
   const startTop = screenHeight  - startWindowHeight
