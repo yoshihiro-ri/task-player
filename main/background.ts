@@ -29,9 +29,7 @@ if (isProd) {
   });
 
   const updateBounds = (isOpened: boolean) => {
-    console.log("isOpened", isOpened);
     isTaskPlayerOpened = isOpened;
-    console.log(isTaskPlayerOpened);
     if (isTaskPlayerOpened) {
       updateTaskPlayersBoundsOpened(mainWindow);
     } else {
@@ -41,6 +39,7 @@ if (isProd) {
 
   mainWindow.on("blur", () => {
     updateBounds(false);
+    mainWindow.webContents.send('task-player-status-changed', false);
   });
 
   ipcMain.on("update-bounds", (_, status) => {

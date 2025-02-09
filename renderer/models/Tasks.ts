@@ -40,8 +40,7 @@ export class Tasks {
   }
 
   activeTasks(): Task[] {
-    console.log('%o',this.items)
-    return this.items.filter((task) => !task.isCompleted);
+    return this.items.filter((task) => !task.isCompleted && !task.isCanceled);
   }
 
   completedTasks(): Task[] {

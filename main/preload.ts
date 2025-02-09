@@ -19,10 +19,11 @@ contextBridge.exposeInMainWorld("ipc", handler);
 
 contextBridge.exposeInMainWorld("electron", {
   updateStatus: (status: boolean) => {
-    console.log("status", status);
     ipcRenderer.send("update-bounds", status);
   },
   getStatus: () => ipcRenderer.invoke("get-status"),
+  on: (channel: string, callback: Function) => ipcRenderer.on(channel, callback),
+  off: (channel: string, callback: Function) => ipcRenderer.removeListener(channel, callback),
 });
 
 declare global {

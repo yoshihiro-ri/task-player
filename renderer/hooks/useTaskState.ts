@@ -30,6 +30,8 @@ export const useTaskState = ({ task, scheduledTime, onTaskUpdate }: UseTaskState
 
   const cancelTask = () => {
     setIsCanceled(true);
+    task.isCanceled = true;
+    onTaskUpdate(task);
   };
 
   const calcProgressionRate = () => {
@@ -42,8 +44,6 @@ export const useTaskState = ({ task, scheduledTime, onTaskUpdate }: UseTaskState
     if (isRunning) {
       interval = setInterval(() => {
         setElapsedTime((prev) => prev + 1);
-        // calcProgressionRate();
-        // console.log(elapsedTime);
       }, 1000);
     }
     return () => clearInterval(interval);

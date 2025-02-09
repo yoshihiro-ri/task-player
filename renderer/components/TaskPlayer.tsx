@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CancelTaskButton from "./Button/CancelTaskButton";
 import PauseTaskButton from "./Button/PauseTaskButton";
 import PlayTaskButton from "./Button/PlayTaskButton";
@@ -21,8 +21,11 @@ interface TaskPlayerProps {
 declare global {
   interface Window {
     electron: {
-      updateStatus: (status:boolean) => void;
-    }
+      updateStatus: (status: boolean) => void;
+      getStatus: () => boolean;
+      on: (channel: string, callback: Function) => void;
+      off: (channel: string, callback: Function) => void;
+    };
   }
 }
 
@@ -56,6 +59,25 @@ const TaskPlayer: React.FC<TaskPlayerProps> = ({
     id: task.id,
   });
 
+  const [isWindowReady, setIsWindowReady] = useState(false);
+  const [isTaskPlayerOpened, setIsTaskPlayerOpened] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.electron) {
+      setIsWindowReady(true);
+
+      const handleStatusChange = (_event: any, status: boolean) => {
+        setIsTaskPlayerOpened(status);
+      };
+
+      window.electron.on('task-player-status-changed', handleStatusChange);
+
+      return () => {
+        window.electron.off('task-player-status-changed', handleStatusChange);
+      };
+    }
+  }, []);
+
   const handleUpdateTitle = (newTitle: string) => {
     task.title = newTitle;
   };
@@ -74,11 +96,16 @@ const TaskPlayer: React.FC<TaskPlayerProps> = ({
       className="relative"
     >
       <ProgressBar progressionRate={progressionRate} />
-      <div
-        className="absolute inset-0 cursor-pointer z-10"
-        onClick={() => window.electron.updateStatus(true)}
+      {isWindowReady && !isTaskPlayerOpened && (
+        <div
+          className="absolute inset-0 cursor-pointer z-10"
+          onClick={() => {
+            window.electron.updateStatus(true);
+            setIsTaskPlayerOpened(true);
+          }}
+        />
+      )}
 
-      />
       <div className="flex bg-gray-500 p-4 gap-x-5 relative">
         <div className="z-20">
           <CancelTaskButton onClick={cancelTask} />

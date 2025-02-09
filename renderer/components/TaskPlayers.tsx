@@ -18,7 +18,6 @@ const TaskPlayers = () => {
 
   const handleTaskUpdate = (updatedTask: Task) => {
     setTasks(tasks.updateTask(updatedTask));
-    console.log("updatedTask")
   };
 
   const activeTasks = tasks.activeTasks()
@@ -42,7 +41,6 @@ const TaskPlayers = () => {
                 (item) => item.id === over.id
               );
               const newArray = arrayMove(tasksArray, oldIndex, newIndex);
-              console.log(newArray)
               return Tasks.fromArray(newArray);
             });
           }
