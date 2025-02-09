@@ -19,7 +19,7 @@ const ScheduledTime = ({ scheduledTime, onTimeChange }: Props) => {
     <select
       value={scheduledTime}
       onChange={(e) => onTimeChange(Number(e.target.value))}
-      className="bg-gray-700 text-white p-2 rounded"
+      className="bg-gray-500 text-white ml-5 rounded text-right"
     >
       {timeOptions.map((option) => (
         <option key={option.value} value={option.value * 60}>

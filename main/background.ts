@@ -25,9 +25,9 @@ if (isProd) {
 
   mainWindow = new BrowserWindow({
     width: 500,
-    height: 80,
+    height: 66,
     x: (screenWidth - 500) / 2,
-    y: screenHeight - 80,
+    y: screenHeight - 66,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -37,7 +37,16 @@ if (isProd) {
     transparent: true,
     alwaysOnTop: true,
     opacity: 0.9,
+    // resizable: false,
+    // movable: false,
   });
+
+  // リロードを無効化
+  // mainWindow.webContents.on("before-input-event", (event, input) => {
+  //   if ((input.control || input.meta) && input.key.toLowerCase() === "r") {
+  //     event.preventDefault();
+  //   }
+  // });
 
   const updateBounds = (isOpened: boolean) => {
     isTaskPlayerOpened = isOpened;

@@ -24,14 +24,14 @@ const TaskTitle = ({ title, onUpdate }: Props) => {
           onChange={(e) => setEditingTitle(e.target.value)}
           onBlur={handleSubmit}
           autoFocus
-          className="bg-gray-500 text-black rounded"  // 背景色を追加
+          className="bg-gray-500 text-black rounded text-xs"
           />
       </form>
     );
   }
 
   return (
-    <div onClick={() => setIsEditing(true)} className="cursor-pointer">
+    <div onClick={() => setIsEditing(true)} className="cursor-pointer text-ellipsis w-48 overflow-hidden whitespace-nowrap text-xs">
       {editingTitle}
     </div>
   );

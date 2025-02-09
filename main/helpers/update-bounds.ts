@@ -6,7 +6,7 @@ const animateWindowSize = async (
   endTop: number,
   startWindowHeight: number,
   endWindowHeight: number,
-  duration: number = 80
+  duration: number = 60
 ) => {
 
   const steps = 30;
