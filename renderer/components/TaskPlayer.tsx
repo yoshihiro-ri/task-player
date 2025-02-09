@@ -22,7 +22,7 @@ declare global {
   interface Window {
     electron: {
       updateStatus: (status: boolean) => void;
-      getStatus: () => boolean;
+      getStatus: () => Promise<boolean>;
       on: (channel: string, callback: Function) => void;
       off: (channel: string, callback: Function) => void;
     };
@@ -65,6 +65,13 @@ const TaskPlayer: React.FC<TaskPlayerProps> = ({
   useEffect(() => {
     if (typeof window !== "undefined" && window.electron) {
       setIsWindowReady(true);
+
+      // 初期状態を取得
+      const initStatus = async () => {
+        const status = await window.electron.getStatus();
+        setIsTaskPlayerOpened(status);
+      };
+      initStatus();
 
       const handleStatusChange = (_event: any, status: boolean) => {
         setIsTaskPlayerOpened(status);

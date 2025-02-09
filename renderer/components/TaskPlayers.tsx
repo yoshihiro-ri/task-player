@@ -9,7 +9,6 @@ import {
   SortableContext,
   arrayMove,
   verticalListSortingStrategy,
-  sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 
 const TaskPlayers = () => {
