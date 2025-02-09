@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TaskPlayer from "./TaskPlayer";
 import AddTaskButton from "./Button/AddTaskButton";
 import { Tasks } from "../models/Tasks";
 import { Task } from "../models/Task";
 import CompletedTask from "./CompletedTask";
-import { DndContext } from "@dnd-kit/core";
-import { SortableContext, arrayMove ,verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import { 
+  SortableContext, 
+  arrayMove, 
+  verticalListSortingStrategy,
+  sortableKeyboardCoordinates 
+} from "@dnd-kit/sortable";
 
 const TaskPlayers = () => {
   const initialTasks = new Tasks().add(new Task());
@@ -20,33 +25,31 @@ const TaskPlayers = () => {
     setTasks(tasks.updateTask(updatedTask));
   };
 
-  const activeTasks = tasks.activeTasks()
-  const completedTasks = tasks.completedTasks()
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      setTasks((tasks) => {
+        const tasksArray = tasks.toArray();
+        const oldIndex = tasksArray.findIndex(item => item.id === active.id);
+        const newIndex = tasksArray.findIndex(item => item.id === over.id);
+        const newArray = arrayMove(tasksArray, oldIndex, newIndex);
+        return Tasks.fromArray(newArray);
+      });
+    }
+  };
+
+  const activeTasks = tasks.activeTasks();
+  const completedTasks = tasks.completedTasks();
 
   return (
     <div className="overflow-hidden w-full">
       <DndContext
-        onDragEnd={(event) => {
-          const { active, over } = event;
-          if (over == null) {
-            return;
-          }
-          if (active.id !== over.id) {
-            setTasks((tasks) => {
-              const tasksArray = tasks.toArray();
-              const oldIndex = tasksArray.findIndex(
-                (item) => item.id === active.id
-              );
-              const newIndex = tasksArray.findIndex(
-                (item) => item.id === over.id
-              );
-              const newArray = arrayMove(tasksArray, oldIndex, newIndex);
-              return Tasks.fromArray(newArray);
-            });
-          }
-        }}
+        onDragEnd={handleDragEnd}
       >
-        <SortableContext items={activeTasks} strategy={verticalListSortingStrategy}>
+        <SortableContext 
+          items={activeTasks.map(task => task.id)}
+          strategy={verticalListSortingStrategy}
+        >
           {activeTasks.map((task) => (
             <TaskPlayer
               key={task.id}
@@ -55,7 +58,6 @@ const TaskPlayers = () => {
             />
           ))}
         </SortableContext>
-
         <AddTaskButton onClick={addTask} />
       </DndContext>
       <p>========完了したタスク========</p>
