@@ -5,11 +5,11 @@ import { Tasks } from "../models/Tasks";
 import { Task } from "../models/Task";
 import CompletedTask from "./CompletedTask";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
-import { 
-  SortableContext, 
-  arrayMove, 
+import {
+  SortableContext,
+  arrayMove,
   verticalListSortingStrategy,
-  sortableKeyboardCoordinates 
+  sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 
 const TaskPlayers = () => {
@@ -30,8 +30,8 @@ const TaskPlayers = () => {
     if (over && active.id !== over.id) {
       setTasks((tasks) => {
         const tasksArray = tasks.toArray();
-        const oldIndex = tasksArray.findIndex(item => item.id === active.id);
-        const newIndex = tasksArray.findIndex(item => item.id === over.id);
+        const oldIndex = tasksArray.findIndex((item) => item.id === active.id);
+        const newIndex = tasksArray.findIndex((item) => item.id === over.id);
         const newArray = arrayMove(tasksArray, oldIndex, newIndex);
         return Tasks.fromArray(newArray);
       });
@@ -43,11 +43,9 @@ const TaskPlayers = () => {
 
   return (
     <div className="overflow-hidden w-full">
-      <DndContext
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext 
-          items={activeTasks.map(task => task.id)}
+      <DndContext onDragEnd={handleDragEnd}>
+        <SortableContext
+          items={activeTasks.map((task) => task.id)}
           strategy={verticalListSortingStrategy}
         >
           {activeTasks.map((task) => (
@@ -62,10 +60,7 @@ const TaskPlayers = () => {
       </DndContext>
       <p>========完了したタスク========</p>
       {completedTasks.map((task) => (
-        <CompletedTask 
-          key={task.id}
-          title={task.title} 
-        />
+        <CompletedTask key={task.id} title={task.title} />
       ))}
     </div>
   );

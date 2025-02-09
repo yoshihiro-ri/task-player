@@ -20,7 +20,8 @@ if (isProd) {
 (async () => {
   await app.whenReady();
 
-  const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
+  const { width: screenWidth, height: screenHeight } =
+    screen.getPrimaryDisplay().workAreaSize;
 
   mainWindow = new BrowserWindow({
     width: 500,
@@ -30,12 +31,12 @@ if (isProd) {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, "preload.js"),
     },
     frame: false,
     transparent: true,
     alwaysOnTop: true,
-    opacity: 0.9
+    opacity: 0.9,
   });
 
   const updateBounds = (isOpened: boolean) => {
@@ -49,7 +50,7 @@ if (isProd) {
 
   mainWindow.on("blur", () => {
     updateBounds(false);
-    mainWindow.webContents.send('task-player-status-changed', false);
+    mainWindow.webContents.send("task-player-status-changed", false);
   });
 
   ipcMain.on("update-bounds", (_, status) => {

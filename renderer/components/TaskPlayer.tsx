@@ -63,17 +63,17 @@ const TaskPlayer: React.FC<TaskPlayerProps> = ({
   const [isTaskPlayerOpened, setIsTaskPlayerOpened] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.electron) {
+    if (typeof window !== "undefined" && window.electron) {
       setIsWindowReady(true);
 
       const handleStatusChange = (_event: any, status: boolean) => {
         setIsTaskPlayerOpened(status);
       };
 
-      window.electron.on('task-player-status-changed', handleStatusChange);
+      window.electron.on("task-player-status-changed", handleStatusChange);
 
       return () => {
-        window.electron.off('task-player-status-changed', handleStatusChange);
+        window.electron.off("task-player-status-changed", handleStatusChange);
       };
     }
   }, []);
@@ -99,6 +99,7 @@ const TaskPlayer: React.FC<TaskPlayerProps> = ({
       className="relative"
     >
       <ProgressBar progressionRate={progressionRate} />
+
       {isWindowReady && !isTaskPlayerOpened && (
         <div
           className="absolute inset-0 cursor-pointer z-10"
