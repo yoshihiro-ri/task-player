@@ -19,13 +19,18 @@ if (isProd) {
 (async () => {
   await app.whenReady();
 
-  mainWindow = createWindow("main", {
-    fullscreen: false,
-    height: 200,
-    frame: false,
+  mainWindow = new BrowserWindow({
+    width: 500,
+    height: 80,
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
     },
+    frame: false,
+    transparent: true,
+    alwaysOnTop: true,
+    opacity: 0.9
   });
 
   const updateBounds = (isOpened: boolean) => {

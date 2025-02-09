@@ -83,7 +83,10 @@ const TaskPlayer: React.FC<TaskPlayerProps> = ({
   };
 
   const formatTime = (second: number) => {
-    return format(new Date(second * 1000), "mm:ss");
+    const timeInMilliseconds = second * 1000;
+    return second >= 3600
+      ? format(new Date(timeInMilliseconds), "HH:mm:ss")
+      : format(new Date(timeInMilliseconds), "mm:ss");
   };
 
   return (
