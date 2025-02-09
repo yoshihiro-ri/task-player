@@ -14,7 +14,7 @@ const animateWindowSize = async (
 
   for (let i = 0; i <= steps; i++) {
     const progress = i / steps;
-    const currentTop = startTop - (startTop - endTop) * progress +38;
+    const currentTop = startTop - (startTop - endTop) * progress ;
     const currentWindowHeight = startWindowHeight - (startWindowHeight - endWindowHeight) * progress;
 
     window.setBounds({

@@ -1,11 +1,12 @@
 import path from "path";
 import { app, ipcMain, BrowserWindow, contextBridge } from "electron";
 import serve from "electron-serve";
-import { createWindow } from "./helpers";
+
 import {
   updateTaskPlayersBoundsOpened,
   updateTaskPlayersBoundsClosed,
 } from "./helpers/update-bounds";
+import { screen } from "electron";
 const isProd = process.env.NODE_ENV === "production";
 let mainWindow: BrowserWindow;
 let isTaskPlayerOpened = false;
@@ -19,9 +20,13 @@ if (isProd) {
 (async () => {
   await app.whenReady();
 
+  const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
+
   mainWindow = new BrowserWindow({
     width: 500,
     height: 80,
+    x: (screenWidth - 500) / 2,
+    y: screenHeight - 80,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
