@@ -14,6 +14,34 @@ import {
 const TaskPlayers = () => {
   const initialTasks = new Tasks().add(new Task());
   const [tasks, setTasks] = useState(initialTasks);
+  const [isTaskPlayerOpened, setIsTaskPlayerOpened] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    if (typeof window !== "undefined" && window.electron) {
+      const initStatus = async () => {
+        const status = await window.electron.getStatus();
+        if (isMounted) {
+          setIsTaskPlayerOpened(status);
+        }
+      };
+      initStatus();
+
+      const handleStatusChange = (_event: any, status: boolean) => {
+        if (isMounted) {
+          setIsTaskPlayerOpened(status);
+        }
+      };
+
+      window.electron.on("task-player-status-changed", handleStatusChange);
+
+      return () => {
+        isMounted = false;
+        window.electron.off("task-player-status-changed", handleStatusChange);
+      };
+    }
+  }, []);
 
   const addTask = () => {
     const task = new Task();
@@ -52,6 +80,8 @@ const TaskPlayers = () => {
               key={task.id}
               task={task}
               onTaskUpdate={handleTaskUpdate}
+              isTaskPlayerOpened={isTaskPlayerOpened}
+              setIsTaskPlayerOpened={setIsTaskPlayerOpened}
             />
           ))}
         </SortableContext>

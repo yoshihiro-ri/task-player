@@ -16,6 +16,8 @@ import { CSS } from "@dnd-kit/utilities";
 interface TaskPlayerProps {
   task: Task;
   onTaskUpdate: (task: Task) => void;
+  isTaskPlayerOpened: boolean;
+  setIsTaskPlayerOpened: (status: boolean) => void;
 }
 
 declare global {
@@ -32,6 +34,8 @@ declare global {
 const TaskPlayer: React.FC<TaskPlayerProps> = ({
   task,
   onTaskUpdate,
+  isTaskPlayerOpened,
+  setIsTaskPlayerOpened,
 }: TaskPlayerProps) => {
   const [scheduledTime, setScheduledTime] = useState(15);
   const {
@@ -60,28 +64,10 @@ const TaskPlayer: React.FC<TaskPlayerProps> = ({
   });
 
   const [isWindowReady, setIsWindowReady] = useState(false);
-  const [isTaskPlayerOpened, setIsTaskPlayerOpened] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.electron) {
       setIsWindowReady(true);
-
-      // 初期状態を取得
-      const initStatus = async () => {
-        const status = await window.electron.getStatus();
-        setIsTaskPlayerOpened(status);
-      };
-      initStatus();
-
-      const handleStatusChange = (_event: any, status: boolean) => {
-        setIsTaskPlayerOpened(status);
-      };
-
-      window.electron.on("task-player-status-changed", handleStatusChange);
-
-      return () => {
-        window.electron.off("task-player-status-changed", handleStatusChange);
-      };
     }
   }, []);
 
