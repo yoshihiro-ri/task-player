@@ -1,0 +1,24 @@
+
+name: update to latest stg01 and stg02
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync-to-main:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - run: git fetch origin stg01
+    - run: git checkout stg01
+    - run: git reset --hard origin/main
+    - run: git push -f origin stg01
+
+    - run: git fetch origin stg02
+    - run: git checkout stg02
+    - run: git reset --hard origin/main
+    - run: git push -f origin stg02
