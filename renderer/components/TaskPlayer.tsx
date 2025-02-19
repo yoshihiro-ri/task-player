@@ -104,19 +104,19 @@ const TaskPlayer: React.FC<TaskPlayerProps> = ({
       )}
 
       <div className="flex bg-gray-500 p-4 relative items-center">
-          <div className="z-20">
-            <CancelTaskButton onClick={cancelTask} />
-          </div>
-          <div className="px-6 z-20">
-            {isRunning ? (
-              <PauseTaskButton onClick={isRunning ? stopTimer : startTimer} />
-            ) : (
-              <PlayTaskButton onClick={isRunning ? stopTimer : startTimer} />
-            )}
-          </div>
-          <div className="z-20">
-            <DoneButton onClick={completeTask} />
-          </div>
+        <div className="z-20">
+          <CancelTaskButton onClick={cancelTask} />
+        </div>
+        <div className="px-6 z-20">
+          {isRunning ? (
+            <PauseTaskButton onClick={isRunning ? stopTimer : startTimer} />
+          ) : (
+            <PlayTaskButton onClick={isRunning ? stopTimer : startTimer} />
+          )}
+        </div>
+        <div className="z-20">
+          <DoneButton onClick={completeTask} />
+        </div>
 
         <div className="z-20">
           <ScheduledTime

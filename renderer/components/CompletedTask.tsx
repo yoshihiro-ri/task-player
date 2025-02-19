@@ -1,9 +1,9 @@
 import React from "react";
 type Props = {
-  title:string
-}
+  title: string;
+};
 
-const CompletedTask = ({title}:Props) => {
+const CompletedTask = ({ title }: Props) => {
   return <div>{title}</div>;
 };
 
