@@ -5,6 +5,8 @@ import { Tasks } from "../models/Tasks";
 import { Task } from "../models/Task";
 import CompletedTask from "./CompletedTask";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import { format } from "date-fns";
+
 import {
   SortableContext,
   arrayMove,
@@ -68,6 +70,13 @@ const TaskPlayers = () => {
   const activeTasks = tasks.activeTasks();
   const completedTasks = tasks.completedTasks();
 
+  const formatTime = (second: number) => {
+    const timeInMilliseconds = second * 1000;
+    return second >= 3600
+      ? format(new Date(timeInMilliseconds), "H:mm:ss")
+      : format(new Date(timeInMilliseconds), "mm:ss");
+  };
+
   return (
     <div className="overflow-hidden w-full">
       <DndContext onDragEnd={handleDragEnd}>
@@ -87,10 +96,26 @@ const TaskPlayers = () => {
         </SortableContext>
         <AddTaskButton onClick={addTask} />
       </DndContext>
-      <p>========完了したタスク========</p>
-      {completedTasks.map((task) => (
-        <CompletedTask key={task.id} title={task.title} />
-      ))}
+      <table className="border-collapse border border-gray-40 w-full">
+        <thead>
+          <tr>
+            <th className="border border-gray-300">title</th>
+            <th className="border border-gray-300">used</th>
+
+            {/* <th className="border border-gray-300">scheduled</th> */}
+          </tr>
+        </thead>
+        <tbody>
+          {completedTasks.map((task) => (
+            <CompletedTask
+              key={task.id}
+              title={task.title}
+              elapsedTime={formatTime(task.elapsedTime)}
+              scheduledTime={task.scheduledTime}
+            />
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

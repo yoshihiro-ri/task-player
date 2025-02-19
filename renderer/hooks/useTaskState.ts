@@ -25,6 +25,7 @@ export const useTaskState = ({ task, scheduledTime, onTaskUpdate }: UseTaskState
   const completeTask = () => {
     setIsCompleted(true);
     task.isCompleted = true;
+    console.log(task);
     onTaskUpdate(task);
   };
 
@@ -43,7 +44,11 @@ export const useTaskState = ({ task, scheduledTime, onTaskUpdate }: UseTaskState
     let interval: NodeJS.Timeout;
     if (isRunning) {
       interval = setInterval(() => {
-        setElapsedTime((prev) => prev + 1);
+        setElapsedTime((prev) => {
+          const newElapsedTime = prev + 1;
+          task.elapsedTime = newElapsedTime;
+          return newElapsedTime;
+        });
       }, 1000);
     }
     return () => clearInterval(interval);

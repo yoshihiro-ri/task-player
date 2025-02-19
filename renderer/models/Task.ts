@@ -4,6 +4,7 @@ export class Task {
   id: UniqueIdentifier;
   hash_id: string;
   title: string;
+  elapsedTime: number;
   isCompleted: boolean;
   isCanceled: boolean;
   scheduledTime: number;
@@ -15,5 +16,6 @@ export class Task {
     this.isCompleted = false;
     this.isCanceled = false;
     this.scheduledTime = 15;
+    this.elapsedTime = 0;
   }
 }
