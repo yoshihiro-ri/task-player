@@ -7,7 +7,6 @@ type Props = {
 
 const ScheduledTime = ({ scheduledTime, onTimeChange }: Props) => {
   const timeOptions = [
-    { value: 0.1, label: "10" },
     { value: 5, label: "5:00" },
     { value: 10, label: "10:00" },
     { value: 15, label: "15:00" },
